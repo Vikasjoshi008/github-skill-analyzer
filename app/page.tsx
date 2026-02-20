@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import axios from "axios"
+import api from "../lib/axios";
 
 export default function Home() {
   const [username, setUsername] = useState("");
@@ -13,7 +13,7 @@ export default function Home() {
     try {
     setLoading(true);
 
-    const res = await axios.post("/api/analyze", {
+    const res = await api.post("/api/analyze", {
       username,
     });
 
