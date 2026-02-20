@@ -9,27 +9,28 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   const analyzeProfile = async () => {
-    if (!username) return;
+    const cleanUsername = username.trim();
+    if (!cleanUsername) return;
     try {
-    setLoading(true);
+      setLoading(true);
 
-    const res = await api.post("/api/analyze", {
-      username,
-    });
+      const res = await api.post("/api/analyze", {
+        username: cleanUsername,
+      });
 
-    setResult(res.data);
-  } catch (error) {
-    console.error("Error analyzing profile:", error);
-    alert("Failed to analyze profile. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
+      setResult(res.data);
+    } catch (error) {
+      console.error("Error analyzing profile:", error);
+      alert("Failed to analyze profile. Please try again.");
+      setResult(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-6 text-white">
       <div className="w-full max-w-2xl bg-gray-900/60 backdrop-blur-lg border border-gray-700 rounded-2xl shadow-2xl p-8">
-
         <h1 className="text-4xl font-bold text-center mb-6">
           🚀 AI GitHub Skill Analyzer
         </h1>
@@ -45,7 +46,13 @@ export default function Home() {
 
           <button
             onClick={analyzeProfile}
-            className="bg-purple-600 hover:bg-purple-700 transition px-6 py-3 rounded-lg font-semibold cursor-pointer"
+            disabled={!username.trim() || loading}
+            className={`px-6 py-3 rounded-lg font-semibold transition
+    ${
+      !username.trim() || loading
+        ? "bg-gray-600 cursor-not-allowed"
+        : "bg-purple-600 hover:bg-purple-700"
+    }`}
           >
             {loading ? "Analyzing..." : "Analyze"}
           </button>
@@ -53,7 +60,6 @@ export default function Home() {
 
         {result && (
           <div className="space-y-6">
-
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
               <div className="bg-gray-800 p-4 rounded-xl">
                 <p className="text-gray-400 text-sm">Name</p>
@@ -74,7 +80,7 @@ export default function Home() {
             <div>
               <p className="text-gray-400 mb-2">Top Languages</p>
               <div className="flex flex-wrap gap-2">
-                {result.top_languages
+                {/* {result.languages
                   ?.filter((lang: string | null) => lang !== null)
                   .map((lang: string, index: number) => (
                     <span
@@ -83,10 +89,17 @@ export default function Home() {
                     >
                       {lang}
                     </span>
-                  ))}
+                  ))} */}
+                {result.languages?.map((lang: any, index: number) => (
+                  <span
+                    key={index}
+                    className="bg-purple-700/40 border border-purple-500 text-sm px-3 py-1 rounded-full"
+                  >
+                    {lang.language}
+                  </span>
+                ))}
               </div>
             </div>
-
           </div>
         )}
       </div>
