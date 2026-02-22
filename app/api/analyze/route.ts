@@ -59,7 +59,7 @@ export async function POST(req: Request) {
         messages: [
           {
             role: "system",
-            content: "You are a technical recruiter. Analyze the following GitHub data and return a JSON object with: 'persona' (3-4 words), 'pitch' (2 sentences), and 'growth' (1 sentence)."
+            content: "You are a technical recruiter. Analyze the following GitHub data and return a JSON object with: 'persona', 'pitch', and 'growth'. and also suggest 3-5 skills the user should focus on to improve their profile."
           },
           {
             role: "user",

@@ -44,7 +44,7 @@ export default function Home() {
             <button
               onClick={analyzeProfile}
               disabled={loading}
-              className="bg-purple-600 hover:bg-purple-700 px-8 py-4 rounded-xl font-bold transition-all disabled:opacity-50"
+              className="bg-purple-600 hover:bg-purple-700 px-8 py-4 rounded-xl font-bold transition-all disabled:opacity-50 cursor-pointer"
             >
               {loading ? "Analyzing..." : "Analyze"}
             </button>
