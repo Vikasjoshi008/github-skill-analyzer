@@ -9,17 +9,25 @@ export async function POST(req: Request) {
     const cleanUsername = username?.trim();
 
     if (!cleanUsername) {
-      return NextResponse.json({ error: "Username is required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Username is required" },
+        { status: 400 },
+      );
     }
 
     // 1. Parallel Fetching for better performance
     const [profileRes, repoRes] = await Promise.all([
       fetch(`https://api.github.com/users/${cleanUsername}`),
-      fetch(`https://api.github.com/users/${cleanUsername}/repos?per_page=100&sort=updated`)
+      fetch(
+        `https://api.github.com/users/${cleanUsername}/repos?per_page=100&sort=updated`,
+      ),
     ]);
 
     if (!profileRes.ok) {
-      return NextResponse.json({ error: "GitHub user not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "GitHub user not found" },
+        { status: 404 },
+      );
     }
 
     const profile = await profileRes.json();
@@ -28,30 +36,35 @@ export async function POST(req: Request) {
     // 2. Data Processing Logic
     let totalStars = 0;
     let totalForks = 0;
-    let forkedReposCount = 0;
+    let validCodeRepos = 0;
     const languageCount: Record<string, number> = {};
 
     repos.forEach((repo: any) => {
       totalStars += repo.stargazers_count;
       totalForks += repo.forks_count;
-      if (repo.fork) forkedReposCount++;
+      if (repo.size > 0 && !repo.fork) {
+        validCodeRepos++;
+      }
       if (repo.language) {
         languageCount[repo.language] = (languageCount[repo.language] || 0) + 1;
       }
     });
+    const baseScore = totalStars * 2 + validCodeRepos * 2;
+    const finalScore = Math.min(100, baseScore);
 
     const sortedLanguages = Object.entries(languageCount)
       .map(([language, count]) => ({ language, count }))
       .sort((a, b) => b.count - a.count);
 
-    // 3. Mistral AI Analysis
+    // 3. Mistral AI Technical Audit
     let aiAnalysis = null;
     try {
-      // Create a small metadata snapshot for the AI
-      const repoContext = repos.slice(0, 15).map((r: any) => ({
+      // Create a detailed context of repos including topics
+      const repoContext = repos.slice(0, 30).map((r: any) => ({
         name: r.name,
-        description: r.description,
-        lang: r.language
+        desc: r.description,
+        lang: r.language,
+        topics: r.topics || [],
       }));
 
       const response = await mistral.chat.complete({
@@ -59,23 +72,38 @@ export async function POST(req: Request) {
         messages: [
           {
             role: "system",
-            content: "You are a technical recruiter. Analyze the following GitHub data and return a JSON object with: 'persona', 'pitch', and 'growth'. and also suggest 3-5 skills the user should focus on to improve their profile."
+            content: `You are a Senior Technical Architect. Analyze the GitHub data to:
+            1. Identify the 'detected_role' (e.g., Full Stack, Data Analyst).
+            2. List 'used_stack' (the tools/techs found in their repos).
+            3. List 'missing_stack' (industry-standard tools for their role NOT found in repos).
+            4. Provide a 'persona' summary and a 'pitch' for a recruiter.
+            Return ONLY a valid JSON object.`,
           },
           {
             role: "user",
-            content: `User: ${cleanUsername}. Bio: ${profile.bio}. Languages: ${sortedLanguages.slice(0,3).map(l => l.language).join(", ")}. Repos: ${JSON.stringify(repoContext)}`
-          }
+            content: `Username: ${cleanUsername}. Bio: ${profile.bio}. Languages: ${sortedLanguages
+              .slice(0, 3)
+              .map((l) => l.language)
+              .join(", ")}. Repos: ${JSON.stringify(repoContext)}`,
+          },
         ],
-        responseFormat: { type: "json_object" }
+        responseFormat: { type: "json_object" },
       });
 
       const content = response.choices?.[0].message.content;
-      if (typeof content === 'string') {
+      if (typeof content === "string") {
         aiAnalysis = JSON.parse(content);
       }
     } catch (aiErr) {
       console.error("AI analysis failed:", aiErr);
-      aiAnalysis = { persona: "The Builder", pitch: "Analysis unavailable.", growth: "N/A" };
+      // Fallback object to prevent frontend crashes
+      aiAnalysis = {
+        detected_role: "Developer",
+        used_stack: sortedLanguages.slice(0, 3).map((l) => l.language),
+        missing_stack: ["Unable to analyze"],
+        persona: "The Builder",
+        pitch: "Manual review required.",
+      };
     }
 
     return NextResponse.json({
@@ -90,15 +118,15 @@ export async function POST(req: Request) {
       stats: {
         total_stars: totalStars,
         total_forks: totalForks,
-        forked_repos: forkedReposCount,
-        skill_score: Math.min(100, (totalStars * 2) + (profile.public_repos * 1.5)) // Custom formula
+        skill_score: finalScore,
       },
       languages: sortedLanguages,
-      aiAnalysis
+      aiAnalysis,
     });
-
   } catch (error) {
-    console.error("Server Error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }
