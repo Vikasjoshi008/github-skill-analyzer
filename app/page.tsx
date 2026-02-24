@@ -26,6 +26,7 @@ interface ProfileData {
     pitch: string;
     used_stack: string[];
     missing_stack: string[];
+    skill_rating: number;
   };
 }
 
@@ -103,7 +104,7 @@ export default function Home() {
                     Skill Score
                   </p>
                   <p className="text-4xl font-black text-purple-500">
-                    {result.stats.skill_score}
+                    {result.aiAnalysis.skill_rating}
                   </p>
                 </div>
               </div>

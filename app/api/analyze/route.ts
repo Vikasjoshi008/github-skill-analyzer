@@ -49,7 +49,7 @@ export async function POST(req: Request) {
         languageCount[repo.language] = (languageCount[repo.language] || 0) + 1;
       }
     });
-    const baseScore = totalStars * 2 + validCodeRepos * 2;
+    const baseScore = totalStars * 5 + validCodeRepos * 2;
     const finalScore = Math.min(100, baseScore);
 
     const sortedLanguages = Object.entries(languageCount)
@@ -65,6 +65,7 @@ export async function POST(req: Request) {
         desc: r.description,
         lang: r.language,
         topics: r.topics || [],
+        size: r.size,
       }));
 
       const response = await mistral.chat.complete({
@@ -72,19 +73,28 @@ export async function POST(req: Request) {
         messages: [
           {
             role: "system",
-            content: `You are a Senior Technical Architect. Analyze the GitHub data to:
-            1. Identify the 'detected_role' (e.g., Full Stack, Data Analyst).
-            2. List 'used_stack' (the tools/techs found in their repos).
-            3. List 'missing_stack' (industry-standard tools for their role NOT found in repos).
-            4. Provide a 'persona' summary and a 'pitch' for a recruiter.
-            Return ONLY a valid JSON object.`,
+            content: `You are a Senior Technical Architect and Technical Recruiter. Grade this GitHub profile on a scale of 1 to 10.
+      
+      CRITICAL GRADING INSTRUCTIONS:
+      - 1/10: Empty repositories, placeholders, or only template code (e.g., just 'Hello World').
+      - 2-3/10: Beginner. Simple scripts, basic HTML/CSS, or small logic exercises (e.g., basic calculator).
+      - 4-6/10: Intermediate. Functional applications using frameworks (React, Express, etc.) with clear logic.
+      - 7-9/10: Advanced. Production-ready code, complex architecture, testing, and good documentation.
+      - 10/10: Expert. High community impact (stars), deep technical complexity, or unique architectural innovations.
+
+      Analyze the data to provide:
+      1. 'skill_rating': A number from 1-10 based strictly on the complexity and quality of CODE found.
+      2. 'detected_role': Primary role (e.g., Full Stack, Backend).
+      3. 'used_stack': Specific tools/frameworks used.
+      4. 'missing_stack': All essential industry-standard modern tools for their role NOT found in their repos.
+      5. 'persona': A 1-sentence summary.
+      6. 'pitch': A 2-sentence recruiter pitch.
+
+      Return ONLY a valid JSON object.`,
           },
           {
             role: "user",
-            content: `Username: ${cleanUsername}. Bio: ${profile.bio}. Languages: ${sortedLanguages
-              .slice(0, 3)
-              .map((l) => l.language)
-              .join(", ")}. Repos: ${JSON.stringify(repoContext)}`,
+            content: `Username: ${cleanUsername}. Bio: ${profile.bio}. Repos Data: ${JSON.stringify(repoContext)}`,
           },
         ],
         responseFormat: { type: "json_object" },
