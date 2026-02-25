@@ -73,24 +73,29 @@ export async function POST(req: Request) {
         messages: [
           {
             role: "system",
-            content: `You are a Senior Technical Architect and Technical Recruiter. Grade this GitHub profile on a scale of 1 to 10.
-      
-      CRITICAL GRADING INSTRUCTIONS:
-      - 1/10: Empty repositories, placeholders, or only template code (e.g., just 'Hello World').
-      - 2-3/10: Beginner. Simple scripts, basic HTML/CSS, or small logic exercises (e.g., basic calculator).
-      - 4-6/10: Intermediate. Functional applications using frameworks (React, Express, etc.) with clear logic.
-      - 7-9/10: Advanced. Production-ready code, complex architecture, testing, and good documentation.
-      - 10/10: Expert. High community impact (stars), deep technical complexity, or unique architectural innovations.
+            content: `You are an Expert Technical Auditor. Your task is to perform a role-specific mastery gap analysis.
 
-      Analyze the data to provide:
-      1. 'skill_rating': A number from 1-10 based strictly on the complexity and quality of CODE found.
-      2. 'detected_role': Primary role (e.g., Full Stack, Backend).
-      3. 'used_stack': Specific tools/frameworks used.
-      4. 'missing_stack': All essential industry-standard modern tools for their role NOT found in their repos.
-      5. 'persona': A 1-sentence summary.
-      6. 'pitch': A 2-sentence recruiter pitch.
+      EXECUTION STEPS:
+      1. ANALYZE: Review the user's repos to determine their specific field (e.g., Data Analyst, DevOps Engineer, Full Stack, Data Scientist, Frontend, etc.).
+      2. BENCHMARK: For that SPECIFIC role, recall the complete high-level industry standard (e.g., if Data Scientist, think of: Statistics, ML Ops, Data Cleaning, Visualization, Big Data tools).
+      3. AUDIT: Compare the user's 'used_stack' against that role's complete professional ecosystem.
+      4. GENERATE: Create a massive 'missing_stack' list (10-15 items) that covers advanced concepts the user hasn't shown yet (e.g., Caching for Backend, Model Deployment for Data Science, or Terraform for DevOps).
 
-      Return ONLY a valid JSON object.`,
+      GRADING (1-10):
+      - 1: Placeholder/Empty.
+      - 2-4: Beginner (Single-layer projects).
+      - 5-7: Intermediate (Uses frameworks, clear logic).
+      - 8-10: Expert (Architectural depth, stars, production tools).
+
+      RETURN JSON:
+      {
+        "skill_rating": number,
+        "detected_role": "string",
+        "used_stack": ["string"],
+        "missing_stack": ["string"],
+        "persona": "string",
+        "pitch": "string"
+      }`,
           },
           {
             role: "user",
