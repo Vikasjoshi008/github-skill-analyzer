@@ -52,18 +52,16 @@ export default function Home() {
     }
   };
 
-  
-function StatBox({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-center">
-      <p className="text-zinc-500 text-xs uppercase font-bold">{label}</p>
-      <p className="text-xl font-bold mt-1 tracking-tight">
-        {value.toLocaleString()}
-      </p>
-    </div>
-  );
-}
-
+  function StatBox({ label, value }: { label: string; value: number }) {
+    return (
+      <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-center">
+        <p className="text-zinc-500 text-xs uppercase font-bold">{label}</p>
+        <p className="text-xl font-bold mt-1 tracking-tight">
+          {value.toLocaleString()}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-black text-white p-8 font-sans">
