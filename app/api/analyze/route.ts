@@ -73,7 +73,7 @@ export async function POST(req: Request) {
         messages: [
           {
             role: "system",
-            content: `You are an Expert Technical Auditor. Your task is to perform a role-specific mastery gap analysis.
+            content: `You are an Expert Technical Auditor. Your task is to perform a role-specific mastery gap analysis. And compare the User's GitHub Profile against a specific Job Description (JD).
 
       EXECUTION STEPS:
       1. ANALYZE: Review the user's repos to determine their specific field (e.g., Data Analyst, DevOps Engineer, Full Stack, Data Scientist, Frontend, etc.).
@@ -87,6 +87,10 @@ export async function POST(req: Request) {
       - 5-7: Intermediate (Uses frameworks, clear logic).
       - 8-10: Expert (Architectural depth, stars, production tools).
 
+      1. Calculate a 'match_percentage' (0-100%).
+      2. Identify 'critical_gaps' specifically required by the JD but missing in the Repos.
+      3. Suggest 'The Missing Project': A specific project idea the user should build to prove they can handle this job.
+
       RETURN JSON:
       {
         "skill_rating": number,
@@ -94,7 +98,11 @@ export async function POST(req: Request) {
         "used_stack": ["string"],
         "missing_stack": ["string"],
         "persona": "string",
-        "pitch": "string"
+        "pitch": "string",
+        "match_percentage": number,
+        "critical_gaps": "string",
+        "missing_project_idea": "string",
+        "missing_project_readme_snippet": "string"
       }`,
           },
           {

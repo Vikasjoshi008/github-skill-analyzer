@@ -32,6 +32,7 @@ interface ProfileData {
 
 export default function Home() {
   const [username, setUsername] = useState("");
+  const [jobDescription, setJobDescription] = useState("");
   const [result, setResult] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -87,6 +88,11 @@ export default function Home() {
               {loading ? "Analyzing..." : "Analyze"}
             </button>
           </div>
+          <textarea
+            placeholder="Optional: Paste a Job Description to check your compatibility..."
+            className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm text-zinc-300 h-32"
+            onChange={(e) => setJobDescription(e.target.value)}
+          />
         </div>
 
         {error && <p className="text-red-500 text-center">{error}</p>}
