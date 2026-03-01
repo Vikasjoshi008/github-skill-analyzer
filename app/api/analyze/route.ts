@@ -5,7 +5,7 @@ const mistral = new Mistral({ apiKey: process.env.MISTRAL_API_KEY || "" });
 
 export async function POST(req: Request) {
   try {
-    const { username } = await req.json();
+    const { username, jobDescription } = await req.json();
     const cleanUsername = username?.trim();
 
     if (!cleanUsername) {
@@ -88,8 +88,8 @@ export async function POST(req: Request) {
       - 8-10: Expert (Architectural depth, stars, production tools).
 
       1. Calculate a 'match_percentage' (0-100%).
-      2. Identify 'critical_gaps' specifically required by the JD but missing in the Repos.
-      3. Suggest 'The Missing Project': A specific project idea the user should build to prove they can handle this job.
+      2. Identify 'critical_gaps' specifically required by the JD but missing in the Repos. Write a DEEP technical analysis (minimum 4-5 sentences). Explain exactly which architectural concepts, security practices, or specific technologies the user is missing to be competitive for this role.
+      3. Suggest 'The Missing Project': A specific project idea the user should build to prove they can handle this job. Suggest exactly TWO high-impact project ideas. For each project, provide a title and a 2-sentence explanation of how it proves mastery of the missing skills.
 
       RETURN JSON:
       {
@@ -107,7 +107,10 @@ export async function POST(req: Request) {
           },
           {
             role: "user",
-            content: `Username: ${cleanUsername}. Bio: ${profile.bio}. Repos Data: ${JSON.stringify(repoContext)}`,
+            content: `Username: ${cleanUsername}. 
+            Bio: ${profile.bio}. 
+            Repos Data: ${JSON.stringify(repoContext)}
+            TARGET JOB DESCRIPTION: ${jobDescription || "Not provided - analyze general career path."}`,
           },
         ],
         responseFormat: { type: "json_object" },

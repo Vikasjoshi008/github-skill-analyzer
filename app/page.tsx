@@ -1,10 +1,8 @@
 "use client";
-
 import { useState } from "react";
 import api from "../lib/axios";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Define the interface to match our new AI backend structure
 interface ProfileData {
   profile: {
     username: string;
@@ -27,6 +25,10 @@ interface ProfileData {
     used_stack: string[];
     missing_stack: string[];
     skill_rating: number;
+    match_percentage?: number;
+    critical_gaps?: string;
+    missing_project_idea?: string;
+    missing_project_readme_snippet?: string;
   };
 }
 
@@ -42,7 +44,10 @@ export default function Home() {
     setLoading(true);
     setError(null);
     try {
-      const res = await api.post("/api/analyze", { username: username.trim() });
+      const res = await api.post("/api/analyze", {
+        username: username.trim(),
+        jobDescription: jobDescription.trim(),
+      });
       setResult(res.data);
     } catch (err: any) {
       setError(
@@ -90,6 +95,7 @@ export default function Home() {
           </div>
           <textarea
             placeholder="Optional: Paste a Job Description to check your compatibility..."
+            value={jobDescription}
             className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm text-zinc-300 h-32"
             onChange={(e) => setJobDescription(e.target.value)}
           />
@@ -183,6 +189,73 @@ export default function Home() {
                   </div>
                 </div>
               </motion.div>
+
+              {/* Inside result && (...) block in page.tsx */}
+              {/* {result.aiAnalysis.match_percentage !== undefined && (
+                <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 p-6 rounded-3xl">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-xl font-bold text-blue-400">
+                      Target Match Analysis
+                    </h3>
+                    <span className="text-3xl font-black text-blue-500">
+                      {result.aiAnalysis.match_percentage}%
+                    </span>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-xs uppercase text-zinc-500 font-bold mb-1">
+                        Critical Gaps for this Role
+                      </p>
+                      <p className="text-sm text-zinc-300">
+                        {result.aiAnalysis.critical_gaps}
+                      </p>
+                    </div>
+                    <div className="bg-black/40 p-4 rounded-xl border border-white/5">
+                      <p className="text-xs uppercase text-blue-400 font-bold mb-1">
+                        Recommended Project
+                      </p>
+                      <p className="text-sm font-medium">
+                        {result.aiAnalysis.missing_project_idea}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )} */}
+              {/* Find the Target Match Analysis section in your page.tsx and replace it with this */}
+              {result.aiAnalysis.match_percentage !== undefined && (
+                <div className="bg-gradient-to-br from-blue-900/40 to-purple-900/40 border border-blue-500/30 p-8 rounded-3xl shadow-2xl">
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-2xl font-bold text-blue-400 tracking-tight">
+                      Target Match Analysis
+                    </h3>
+                    <div className="bg-blue-500/20 px-4 py-2 rounded-full border border-blue-500/40">
+                      <span className="text-2xl font-black text-blue-400">
+                        {result.aiAnalysis.match_percentage}%
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-8">
+                    <div>
+                      <h4 className="text-xs uppercase text-blue-300 font-bold mb-3 tracking-widest opacity-70">
+                        Critical Gaps for this Role
+                      </h4>
+                      <p className="text-sm text-zinc-200 leading-relaxed font-medium">
+                        {result.aiAnalysis.critical_gaps}
+                      </p>
+                    </div>
+
+                    <div className="bg-black/40 p-6 rounded-2xl border border-white/5">
+                      <h4 className="text-xs uppercase text-purple-400 font-bold mb-4 tracking-widest">
+                        Recommended Strategic Projects
+                      </h4>
+                      <div className="text-sm text-zinc-300 leading-7 whitespace-pre-line italic">
+                        {result.aiAnalysis.missing_project_idea}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Stats Bar */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
