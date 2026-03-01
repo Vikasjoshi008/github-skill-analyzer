@@ -88,8 +88,8 @@ export async function POST(req: Request) {
       - 8-10: Expert (Architectural depth, stars, production tools).
 
       1. Calculate a 'match_percentage' (0-100%).
-      2. Identify 'critical_gaps' specifically required by the JD but missing in the Repos. Write a DEEP technical analysis (minimum 4-5 sentences). Explain exactly which architectural concepts, security practices, or specific technologies the user is missing to be competitive for this role.
-      3. Suggest 'The Missing Project': A specific project idea the user should build to prove they can handle this job. Suggest exactly TWO high-impact project ideas. For each project, provide a title and a 2-sentence explanation of how it proves mastery of the missing skills.
+      2. Identify 'critical_gaps' specifically required by the JD but missing in the Repos. Write a DEEP technical analysis (minimum 3-4 sentences). Explain exactly which architectural concepts, security practices, or specific technologies the user is missing to be competitive for this role.
+      3. Suggest 'The Missing Project': A specific project idea the user should build to prove they can handle this job. Suggest exactly TWO distinct, high-impact projects. Label them 'Project 1' and 'Project 2'. For each, provide a clear title and a 2-sentence explanation of those projects that specific security or architectural concepts it proves.
 
       RETURN JSON:
       {
