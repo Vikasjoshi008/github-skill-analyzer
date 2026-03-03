@@ -2,6 +2,7 @@
 import { useState } from "react";
 import api from "../lib/axios";
 import { motion, AnimatePresence } from "framer-motion";
+import { FaShareAlt } from "react-icons/fa";
 
 interface ProfileData {
   profile: {
@@ -92,8 +93,8 @@ export default function Home() {
             >
               {loading ? "Analyzing..." : "Analyze"}
             </button>
-            <button className="bg-green-600 rounded-xl px-2 font-bold">
-              share
+            <button className="bg-green-600 rounded-xl px-4 py-2 text-sm cursor-pointer">
+              <FaShareAlt size={20} />
             </button>
           </div>
           <textarea
