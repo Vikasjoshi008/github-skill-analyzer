@@ -92,6 +92,9 @@ export default function Home() {
             >
               {loading ? "Analyzing..." : "Analyze"}
             </button>
+            <button className="bg-green-600 rounded-xl px-2 font-bold">
+              share
+            </button>
           </div>
           <textarea
             placeholder="Optional: Paste a Job Description to check your compatibility..."
@@ -190,37 +193,6 @@ export default function Home() {
                 </div>
               </motion.div>
 
-              {/* Inside result && (...) block in page.tsx */}
-              {/* {result.aiAnalysis.match_percentage !== undefined && (
-                <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 p-6 rounded-3xl">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-xl font-bold text-blue-400">
-                      Target Match Analysis
-                    </h3>
-                    <span className="text-3xl font-black text-blue-500">
-                      {result.aiAnalysis.match_percentage}%
-                    </span>
-                  </div>
-                  <div className="space-y-4">
-                    <div>
-                      <p className="text-xs uppercase text-zinc-500 font-bold mb-1">
-                        Critical Gaps for this Role
-                      </p>
-                      <p className="text-sm text-zinc-300">
-                        {result.aiAnalysis.critical_gaps}
-                      </p>
-                    </div>
-                    <div className="bg-black/40 p-4 rounded-xl border border-white/5">
-                      <p className="text-xs uppercase text-blue-400 font-bold mb-1">
-                        Recommended Project
-                      </p>
-                      <p className="text-sm font-medium">
-                        {result.aiAnalysis.missing_project_idea}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )} */}
               {/* Find the Target Match Analysis section in your page.tsx and replace it with this */}
               {result.aiAnalysis.match_percentage !== undefined && (
                 <div className="bg-gradient-to-br from-blue-900/40 to-purple-900/40 border border-blue-500/30 p-8 rounded-3xl shadow-2xl">
