@@ -59,6 +59,30 @@ export default function Home() {
     }
   };
 
+  const handleShare = async () => {
+    if (!result) return;
+
+    const shareData = {
+      title: "My GitHub Skill Analysis",
+      text: `Check out my GitHub analysis! I got a Skill Score of ${result.aiAnalysis.skill_rating}/10 and I'm a ${result.aiAnalysis.match_percentage}% match for a Cybersecurity role.`,
+      url: window.location.href, // Or a specific result URL if you implement routing
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        // Fallback: Copy to clipboard if Web Share API isn't supported
+        await navigator.clipboard.writeText(
+          `${shareData.text} ${shareData.url}`,
+        );
+        alert("Analysis results copied to clipboard!");
+      }
+    } catch (err) {
+      console.error("Error sharing:", err);
+    }
+  };
+
   function StatBox({ label, value }: { label: string; value: number }) {
     return (
       <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-center">
@@ -92,9 +116,6 @@ export default function Home() {
               className="bg-purple-600 px-8 py-4 rounded-xl font-bold transition-all disabled:opacity-50 cursor-pointer"
             >
               {loading ? "Analyzing..." : "Analyze"}
-            </button>
-            <button className="bg-green-600 rounded-xl px-4 py-2 text-sm cursor-pointer">
-              <FaShareAlt size={20} />
             </button>
           </div>
           <textarea
@@ -133,6 +154,29 @@ export default function Home() {
                   <p className="text-4xl font-black text-purple-500">
                     {result.aiAnalysis.skill_rating}
                   </p>
+                </div>
+                <div className="flex justify-end mt-4">
+                  <button
+                    onClick={handleShare}
+                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-bold transition-all shadow-lg hover:shadow-blue-500/20"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                      <polyline points="16 6 12 2 8 6" />
+                      <line x1="12" y1="2" x2="12" y2="15" />
+                    </svg>
+                    Share Results
+                  </button>
                 </div>
               </div>
 
