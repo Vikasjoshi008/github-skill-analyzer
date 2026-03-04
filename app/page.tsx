@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import api from "../lib/axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaShareAlt } from "react-icons/fa";
+import { toPng } from "html-to-image";
 
 interface ProfileData {
   profile: {
@@ -64,15 +64,14 @@ export default function Home() {
 
     const shareData = {
       title: "My GitHub Skill Analysis",
-      text: `Check out my GitHub analysis! I got a Skill Score of ${result.aiAnalysis.skill_rating}/10 and I'm a ${result.aiAnalysis.match_percentage}% match for a Cybersecurity role.`,
-      url: window.location.href, // Or a specific result URL if you implement routing
+      text: `Check out my GitHub analysis! I got a Skill Score of ${result.aiAnalysis.skill_rating}/10 and I'm a ${result.aiAnalysis.match_percentage}% match for a ${result.aiAnalysis.detected_role} role.`,
+      url: window.location.href,
     };
 
     try {
       if (navigator.share) {
         await navigator.share(shareData);
       } else {
-        // Fallback: Copy to clipboard if Web Share API isn't supported
         await navigator.clipboard.writeText(
           `${shareData.text} ${shareData.url}`,
         );
