@@ -30,6 +30,14 @@ interface ProfileData {
     critical_gaps?: string;
     missing_project_idea?: string;
     missing_project_readme_snippet?: string;
+    repo_improvements: {
+      repo_name: string;
+      suggestions: string[];
+    }[];
+    readme_generator: {
+      title: string;
+      content: string;
+    };
   };
 }
 

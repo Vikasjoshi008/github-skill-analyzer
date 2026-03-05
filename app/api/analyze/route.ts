@@ -87,6 +87,9 @@ export async function POST(req: Request) {
       - 5-7: Intermediate (Uses frameworks, clear logic).
       - 8-10: Expert (Architectural depth, stars, production tools).
 
+      1. REPO IMPROVEMENTS: For the user's top 3 repos, provide some specific technical improvement suggestions each.
+      2. README GENERATOR: Based on the user's most significant project, generate a professional, recruiter-ready README.md structure.
+
       1. Calculate a 'match_percentage' (0-100%).
       2. Identify 'critical_gaps' specifically required by the JD but missing in the Repos. Write a DEEP technical analysis (minimum 3-4 sentences). Explain exactly which architectural concepts, security practices, or specific technologies the user is missing to be competitive for this role.
       3. Suggest 'The Missing Project': A specific project idea the user should build to prove they can handle this job. Suggest exactly TWO distinct, high-impact projects. Label them 'Project 1' and 'Project 2'. For each, provide a clear title and a 2-sentence explanation of those projects that specific security or architectural concepts it proves.
@@ -102,7 +105,14 @@ export async function POST(req: Request) {
         "match_percentage": number,
         "critical_gaps": "string",
         "missing_project_idea": "string",
-        "missing_project_readme_snippet": "string"
+        "missing_project_readme_snippet": "string",
+        "repo_improvements": [
+          { "repo_name": "string", "suggestions": ["string", "string"] }
+        ],
+        "readme_generator": {
+          "title": "string",
+          "content": "string (Markdown format)"
+        }
       }`,
           },
           {
