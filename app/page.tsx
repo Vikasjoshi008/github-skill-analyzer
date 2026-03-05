@@ -259,6 +259,34 @@ export default function Home() {
                     </div>
                   </div>
 
+                  <div className="space-y-4">
+                    <h3 className="text-xl font-bold text-purple-400">
+                      🛠️ Repo-Specific Improvements
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {result.aiAnalysis.repo_improvements.map((repo, idx) => (
+                        <div
+                          key={idx}
+                          className="bg-zinc-900 border border-zinc-800 p-5 rounded-2xl"
+                        >
+                          <h4 className="text-white font-bold mb-2">
+                            {repo.repo_name}
+                          </h4>
+                          <ul className="space-y-2">
+                            {repo.suggestions.map((s, i) => (
+                              <li
+                                key={i}
+                                className="text-xs text-zinc-400 flex gap-2"
+                              >
+                                <span className="text-purple-500">→</span> {s}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
                   <div className="space-y-8">
                     <div>
                       <h4 className="text-xs uppercase text-blue-300 font-bold mb-3 tracking-widest opacity-70">
@@ -276,6 +304,29 @@ export default function Home() {
                       <div className="text-sm text-zinc-300 leading-7 whitespace-pre-line italic">
                         {result.aiAnalysis.missing_project_idea}
                       </div>
+                    </div>
+                  </div>
+
+                  {/* Inside the result section in page.tsx */}
+                  <div className="bg-zinc-900 border border-zinc-800 p-8 rounded-3xl mt-8">
+                    <div className="flex justify-between items-center mb-6">
+                      <h3 className="text-xl font-bold text-green-400">
+                        📄 Professional README Generator
+                      </h3>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(
+                            result.aiAnalysis.readme_generator.content,
+                          );
+                          alert("README copied to clipboard!");
+                        }}
+                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors"
+                      >
+                        Copy Markdown
+                      </button>
+                    </div>
+                    <div className="bg-black/50 p-6 rounded-xl border border-white/5 font-mono text-xs text-zinc-300 overflow-x-auto whitespace-pre-wrap">
+                      {result.aiAnalysis.readme_generator.content}
                     </div>
                   </div>
                 </div>
