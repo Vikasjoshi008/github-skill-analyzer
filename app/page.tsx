@@ -289,7 +289,7 @@ export default function Home() {
 
                   <div className="space-y-8">
                     <div>
-                      <h4 className="text-xs uppercase text-blue-300 font-bold mb-3 tracking-widest opacity-70">
+                      <h4 className="text-xs uppercase text-blue-300 font-bold mb-3 mt-3 tracking-widest opacity-70">
                         Critical Gaps for this Role
                       </h4>
                       <p className="text-sm text-zinc-200 leading-relaxed font-medium">
