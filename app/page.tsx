@@ -1,8 +1,7 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import api from "../lib/axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { toPng } from "html-to-image";
 
 interface ProfileData {
   profile: {
