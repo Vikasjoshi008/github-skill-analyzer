@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { Mistral } from "@mistralai/mistralai";
 
-const mistral = new Mistral({ apiKey: process.env.MISTRAL_API_KEY || "" });
+const mistral = new Mistral({ apiKey: process.env.MISTRAL_API_KEY });
 
 export async function POST(req: Request) {
+  console.log(">>> API HIT SUCCESSFUL");
   try {
     const { username, jobDescription } = await req.json();
     const cleanUsername = username?.trim();
@@ -159,7 +160,8 @@ export async function POST(req: Request) {
       languages: sortedLanguages,
       aiAnalysis,
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.log("DETAILED SERVER ERROR:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },
