@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 GitHub Skill Analyzer
 
-## Getting Started
+An AI-powered technical auditing tool that evaluates GitHub profiles, calculates skill scores, and generates recruiter-ready career insights. Built with **Next.js**, **TypeScript**, and **Mistral AI**.
 
-First, run the development server:
+[![Vercel Deployment](https://img.shields.io/badge/Vercel-Deployed-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://your-vercel-link.vercel.app)
+[![Next.js](https://img.shields.io/badge/Next.js-14-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![Mistral AI](https://img.shields.io/badge/Mistral_AI-Powered-FF6000?style=for-the-badge&logo=mistralai&logoColor=white)](https://mistral.ai/)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ✨ Key Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Technical Audit Persona:** Analyzes code history to generate a professional developer "vibe check."
+- **Target Match Analysis:** Compares profiles against specific Job Descriptions (JD) to provide a compatibility percentage.
+- **Repo-Specific Refactoring:** Provides 2-3 specific technical improvement suggestions for your top 3 repositories.
+- **Professional README Generator:** One-click generation of high-quality documentation for your standout projects.
+- **Mobile-First UI:** Fully responsive design with glassmorphism and smooth Framer Motion animations.
+- **Share Card Support:** Native Web Share API integration to post results on social media.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Framework:** Next.js 14 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **Animations:** Framer Motion
+- **AI Engine:** Mistral AI (`mistral-small-latest`)
+- **Data:** GitHub REST API v3
 
-## Learn More
+## 🚀 Getting Started
 
-To learn more about Next.js, take a look at the following resources:
+### Prerequisites
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Node.js 18.x or later
+- A Mistral AI API Key
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Installation
 
-## Deploy on Vercel
+1. **Clone the repo**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```bash
+   git clone [https://github.com/Vikasjoshi008/github-skill-analyzer.git](https://github.com/Vikasjoshi008/github-skill-analyzer.git)
+   cd github-skill-analyzer
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+
+   ```
+
+3. **Environment Setup**
+   Create a .env.local file in the root directory:
+
+   MISTRAL_API_KEY=your_api_key_here
+
+   # Optional: Increase rate limits
+
+   GITHUB_TOKEN=your_github_personal_access_token
+   Run Development Server
+
+   Bash
+   npm run dev
+
+📸 Preview
+(Add your mobile and desktop screenshots here to showcase the responsive UI)
+
+📄 License
+Distributed under the MIT License. See LICENSE for more information.
+
+Developed by Vikas Joshi
+
+### Tips for your Repository:
+
+1. **The "About" Section:** Make sure to paste the description and your Vercel link in the GitHub sidebar under "About."
+2. **The `LICENSE` File:** Create a new file in your root folder named `LICENSE` and paste the standard MIT License text into it. This makes the project look official.
+3. **Screenshots:** Since you spent time on the mobile responsiveness, add two images side-by-side in the `README`—one showing the desktop view and one showing the mobile view.
