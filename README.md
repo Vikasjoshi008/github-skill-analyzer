@@ -68,9 +68,3 @@ An AI-powered technical auditing tool that evaluates GitHub profiles, calculates
 Distributed under the MIT License. See LICENSE for more information.
 
 Developed by Vikas Joshi
-
-### Tips for your Repository:
-
-1. **The "About" Section:** Make sure to paste the description and your Vercel link in the GitHub sidebar under "About."
-2. **The `LICENSE` File:** Create a new file in your root folder named `LICENSE` and paste the standard MIT License text into it. This makes the project look official.
-3. **Screenshots:** Since you spent time on the mobile responsiveness, add two images side-by-side in the `README`—one showing the desktop view and one showing the mobile view.
