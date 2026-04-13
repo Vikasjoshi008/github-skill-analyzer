@@ -58,11 +58,8 @@ An AI-powered technical auditing tool that evaluates GitHub profiles, calculates
    GITHUB_TOKEN=your_github_personal_access_token
    Run Development Server
 
-   Bash
+   ```bash
    npm run dev
-
-📸 Preview
-(Add your mobile and desktop screenshots here to showcase the responsive UI)
 
 📄 License
 Distributed under the MIT License. See LICENSE for more information.
