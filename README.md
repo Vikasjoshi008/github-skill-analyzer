@@ -53,10 +53,6 @@ An AI-powered technical auditing tool that evaluates GitHub profiles, calculates
 
    MISTRAL_API_KEY=your_api_key_here
 
-   # Optional: Increase rate limits
-
-   GITHUB_TOKEN=your_github_personal_access_token
-   Run Development Server
 
    ```bash
    npm run dev
