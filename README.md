@@ -60,4 +60,4 @@ An AI-powered technical auditing tool that evaluates GitHub profiles, calculates
 📄 License
 Distributed under the MIT License. See LICENSE for more information.
 
-Developed by Vikas Joshi
+Developed by ❤️ Vikas Joshi
