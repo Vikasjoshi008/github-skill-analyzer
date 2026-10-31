@@ -20,23 +20,38 @@ export async function POST(req: Request) {
       );
     }
 
-    // 1. Parallel Fetching for better performance
-    const [profileRes, repoRes] = await Promise.all([
-      fetch(`https://api.github.com/users/${cleanUsername}`),
-      fetch(
-        `https://api.github.com/users/${cleanUsername}/repos?per_page=100&sort=updated`,
-      ),
-    ]);
+    // 1. Fetch ALL repositories with pagination
+    let allRepos: any[] = [];
+    let page = 1;
+    const perPage = 100;
 
+    while (true) {
+      const repoRes = await fetch(
+        `https://api.github.com/users/${cleanUsername}/repos?per_page=${perPage}&page=${page}&sort=updated`,
+      );
+
+      if (!repoRes.ok) break;
+
+      const repos = await repoRes.json();
+      if (repos.length === 0) break;
+
+      allRepos = [...allRepos, ...repos];
+
+      if (repos.length < perPage) break;
+      page++;
+    }
+
+    // Fetch profile
+    const profileRes = await fetch(
+      `https://api.github.com/users/${cleanUsername}`,
+    );
     if (!profileRes.ok) {
       return NextResponse.json(
         { error: "GitHub user not found" },
         { status: 404 },
       );
     }
-
     const profile = await profileRes.json();
-    const repos = await repoRes.json();
 
     // 2. Data Processing Logic
     let totalStars = 0;
@@ -44,7 +59,7 @@ export async function POST(req: Request) {
     let validCodeRepos = 0;
     const languageCount: Record<string, number> = {};
 
-    repos.forEach((repo: any) => {
+    allRepos.forEach((repo: any) => {
       totalStars += repo.stargazers_count;
       totalForks += repo.forks_count;
       if (repo.size > 0 && !repo.fork) {
@@ -54,6 +69,7 @@ export async function POST(req: Request) {
         languageCount[repo.language] = (languageCount[repo.language] || 0) + 1;
       }
     });
+
     const baseScore = totalStars * 5 + validCodeRepos * 2;
     const finalScore = Math.min(100, baseScore);
 
@@ -61,19 +77,35 @@ export async function POST(req: Request) {
       .map(([language, count]) => ({ language, count }))
       .sort((a, b) => b.count - a.count);
 
-    // 3. Groq Llama Technical Audit
+    // 3. Sort repos by activity and take the top 30
+    const topActiveRepos = allRepos
+      .filter((r: any) => !r.fork && r.size > 0)
+      .sort((a: any, b: any) => {
+        const scoreA =
+          a.stargazers_count * 5 + a.forks_count * 3 + a.size / 1000;
+        const scoreB =
+          b.stargazers_count * 5 + b.forks_count * 3 + b.size / 1000;
+        return scoreB - scoreA;
+      })
+      .slice(0, 30);
+
+    // 4. Groq Llama Technical Audit
     let aiAnalysis = null;
     try {
-      const repoContext = repos.slice(0, 30).map((r: any) => ({
+      const repoContext = topActiveRepos.map((r: any) => ({
         name: r.name,
         desc: r.description,
         lang: r.language,
         topics: r.topics || [],
         size: r.size,
+        stars: r.stargazers_count,
+        forks: r.forks_count,
       }));
 
       const response = await groq.chat.completions.create({
         model: "openai/gpt-oss-20b",
+        temperature: 0.1,
+        max_tokens: 4096, // Critical: Gives the reasoning model enough space to think and output JSON
         messages: [
           {
             role: "system",
@@ -105,11 +137,7 @@ RETURN VALID JSON ONLY matching this structure:
   "missing_project_readme_snippet": "string",
   "repo_improvements": [
     { "repo_name": "string", "suggestions": ["string", "string"] }
-  ],
-  "readme_generator": {
-    "title": "string",
-    "content": "string (Markdown format)"
-  }
+  ]
 }`,
           },
           {
@@ -120,21 +148,89 @@ RETURN VALID JSON ONLY matching this structure:
             TARGET JOB DESCRIPTION: ${jobDescription || "Not provided - analyze general career path."}`,
           },
         ],
-        response_format: { type: "json_object" },
+        response_format: {
+          type: "json_schema",
+          json_schema: {
+            name: "skill_analysis",
+            strict: true,
+            schema: {
+              type: "object",
+              properties: {
+                skill_rating: { type: "number" },
+                detected_role: { type: "string" },
+                used_stack: { type: "array", items: { type: "string" } },
+                missing_stack: { type: "array", items: { type: "string" } },
+                persona: { type: "string" },
+                pitch: { type: "string" },
+                match_percentage: { type: "number" },
+                critical_gaps: { type: "string" },
+                missing_project_idea: { type: "string" },
+                missing_project_readme_snippet: { type: "string" },
+                repo_improvements: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      repo_name: { type: "string" },
+                      suggestions: { type: "array", items: { type: "string" } },
+                    },
+                    required: ["repo_name", "suggestions"],
+                    additionalProperties: false,
+                  },
+                },
+              },
+              required: [
+                "skill_rating",
+                "detected_role",
+                "used_stack",
+                "missing_stack",
+                "persona",
+                "pitch",
+                "match_percentage",
+                "critical_gaps",
+                "missing_project_idea",
+                "missing_project_readme_snippet",
+                "repo_improvements",
+              ],
+              additionalProperties: false,
+            },
+          },
+        },
       });
 
       const content = response.choices?.[0]?.message?.content;
+
       if (typeof content === "string") {
-        aiAnalysis = JSON.parse(content);
+        const jsonMatch = content.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          aiAnalysis = JSON.parse(jsonMatch[0]);
+
+          // 🧹 CLEANUP: Remove duplicates from AI output
+          if (aiAnalysis.used_stack) {
+            aiAnalysis.used_stack = [...new Set(aiAnalysis.used_stack)];
+          }
+          if (aiAnalysis.missing_stack) {
+            aiAnalysis.missing_stack = [...new Set(aiAnalysis.missing_stack)];
+          }
+        } else {
+          throw new Error("Model did not return valid JSON structure");
+        }
       }
     } catch (aiErr) {
       console.error("AI analysis failed:", aiErr);
+      // Fallback if AI fails completely
       aiAnalysis = {
         detected_role: "Developer",
         used_stack: sortedLanguages.slice(0, 3).map((l) => l.language),
-        missing_stack: ["Unable to analyze"],
+        missing_stack: ["Unable to analyze (AI Error)"],
         persona: "The Builder",
-        pitch: "Manual review required.",
+        pitch: "Manual review required due to an AI processing error.",
+        skill_rating: 0,
+        match_percentage: 0,
+        critical_gaps: "N/A",
+        missing_project_idea: "N/A",
+        missing_project_readme_snippet: "N/A",
+        repo_improvements: [],
       };
     }
 

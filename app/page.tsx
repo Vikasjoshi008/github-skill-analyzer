@@ -101,38 +101,45 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white p-4 md:p-8 font-sans">
-      <div className="max-w-3xl mx-auto space-y-6 md:space-y-8">
-        {/* Header */}
-        <div className="text-center space-y-4">
-          <h1 className="text-3xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600 py-2 mt-5">
+    <div className="w-full text-white font-sans py-4 md:py-8 px-4 flex justify-center">
+      {/* Main Container: Full width on mobile, boxed on desktop */}
+      <div className="w-full max-w-4xl space-y-6 md:space-y-8 md:rounded-3xl md:p-8 md:bg-zinc-900/50 md:border md:border-zinc-800 md:shadow-lg">
+        {/* Header & Inputs */}
+        <div className="text-center space-y-4 md:space-y-6">
+          <h1 className="text-3xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600 py-2 mt-2 md:mt-5">
             GitHub Skill Analyzer
           </h1>
-          <div className="flex flex-col sm:flex-row gap-2">
+
+          <div className="flex flex-col sm:flex-row gap-3">
             <input
               type="text"
               placeholder="Enter GitHub Username..."
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="flex-1 bg-zinc-900 border border-zinc-800 p-3 md:p-4 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none"
+              className="flex-1 bg-zinc-900 border border-zinc-800 p-3 md:p-4 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none transition-all"
             />
             <button
               onClick={analyzeProfile}
               disabled={loading}
-              className="bg-purple-600 px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold transition-all disabled:opacity-50 active:scale-95 cursor-pointer"
+              className="bg-purple-600 hover:bg-purple-500 px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold transition-all disabled:opacity-50 active:scale-95 cursor-pointer shadow-lg shadow-purple-900/20 w-full sm:w-auto"
             >
               {loading ? "Analyzing..." : "Analyze"}
             </button>
           </div>
+
           <textarea
             placeholder="Optional: Paste a Job Description to check your compatibility..."
             value={jobDescription}
-            className="w-full bg-zinc-900 border border-zinc-800 p-3 md:p-4 rounded-xl text-sm text-zinc-300 h-28 md:h-32 resize-none outline-none focus:ring-1 focus:ring-zinc-700"
+            className="w-full bg-zinc-900 border border-zinc-800 p-3 md:p-4 rounded-xl text-sm text-zinc-300 h-28 md:h-32 resize-none outline-none focus:ring-1 focus:ring-zinc-700 transition-all"
             onChange={(e) => setJobDescription(e.target.value)}
           />
         </div>
 
-        {error && <p className="text-red-500 text-center text-sm">{error}</p>}
+        {error && (
+          <p className="text-red-500 text-center text-sm bg-red-500/10 p-3 rounded-lg border border-red-500/20">
+            {error}
+          </p>
+        )}
 
         <AnimatePresence>
           {result && (
@@ -141,27 +148,29 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-6"
             >
-              {/* Profile Card */}
+              {/* Profile Card - Responsive Stack on Mobile */}
               <div className="bg-zinc-900/50 border border-zinc-800 p-6 md:p-8 rounded-3xl flex flex-col md:flex-row gap-6 md:gap-8 items-center relative overflow-hidden">
                 <img
                   src={result.profile.avatar}
-                  className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-purple-500/30"
+                  alt={result.profile.name}
+                  className="w-24 h-24 md:w-28 md:h-28 rounded-full border-4 border-purple-500/30 shadow-xl shrink-0"
                 />
-                <div className="flex-1 text-center md:text-left">
-                  <h2 className="text-xl md:text-2xl font-bold truncate max-w-[250px] mx-auto md:mx-0">
+
+                <div className="flex-1 text-center md:text-left w-full">
+                  <h2 className="text-2xl md:text-3xl font-bold truncate max-w-[280px] mx-auto md:mx-0">
                     {result.profile.name}
                   </h2>
-                  <p className="text-purple-400 font-medium text-sm md:text-base">
+                  <p className="text-purple-400 font-medium text-sm md:text-base mt-1">
                     {result.aiAnalysis.detected_role}
                   </p>
                   <button
                     onClick={handleShare}
-                    className="mt-4 flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-xs md:text-sm font-bold transition-all mx-auto md:mx-0"
+                    className="mt-4 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-full text-xs md:text-sm font-bold transition-all mx-auto md:mx-0 w-full sm:w-auto shadow-lg shadow-blue-900/20 cursor-pointer"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="14"
-                      height="14"
+                      width="16"
+                      height="16"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -176,19 +185,24 @@ export default function Home() {
                     Share Results
                   </button>
                 </div>
-                <div className="bg-purple-500/10 p-4 rounded-2xl text-center border border-purple-500/20 min-w-[100px]">
+
+                {/* Skill Score Box - Full width on mobile */}
+                <div className="bg-purple-500/10 p-5 rounded-2xl text-center border border-purple-500/20 w-full md:min-w-[120px] md:w-auto shrink-0">
                   <p className="text-[10px] text-purple-400 uppercase font-bold tracking-widest">
                     Skill Score
                   </p>
-                  <p className="text-3xl md:text-4xl font-black text-purple-500">
+                  <p className="text-4xl md:text-5xl font-black text-purple-500 mt-1">
                     {result.aiAnalysis.skill_rating}
+                  </p>
+                  <p className="text-[10px] text-zinc-500 mt-1 uppercase">
+                    out of 10
                   </p>
                 </div>
               </div>
 
               {/* Low contribution alert */}
               {result.stats.skill_score < 5 && (
-                <div className="bg-red-500/10 border border-red-500/30 p-4 rounded-xl text-red-400 text-xs md:text-sm">
+                <div className="bg-red-500/10 border border-red-500/30 p-4 rounded-xl text-red-400 text-xs md:text-sm text-center">
                   ⚠️ This profile has limited public contributions.
                 </div>
               )}
@@ -202,7 +216,7 @@ export default function Home() {
                 <h3 className="text-lg md:text-xl font-bold text-purple-400 mb-4 flex items-center gap-2">
                   ✨ Technical Auditor Summary
                 </h3>
-                <p className="italic text-gray-300 text-sm md:text-base mb-4">
+                <p className="italic text-gray-300 text-sm md:text-base mb-4 border-l-2 border-purple-500 pl-4">
                   "{result.aiAnalysis.persona}"
                 </p>
                 <p className="text-zinc-400 text-xs md:text-sm leading-relaxed mb-8">
@@ -215,10 +229,10 @@ export default function Home() {
                       Mastered Stack
                     </h4>
                     <div className="flex flex-wrap gap-2">
-                      {result.aiAnalysis.used_stack.map((tech) => (
+                      {result.aiAnalysis.used_stack.map((tech, index) => (
                         <span
-                          key={tech}
-                          className="bg-green-500/10 text-green-300 text-[10px] md:text-xs px-2 py-1 rounded-md"
+                          key={`${tech}-${index}`}
+                          className="bg-green-500/10 text-green-300 text-[10px] md:text-xs px-2 py-1 rounded-md border border-green-500/20"
                         >
                           {tech}
                         </span>
@@ -230,10 +244,10 @@ export default function Home() {
                       Missing Key Skills
                     </h4>
                     <div className="flex flex-wrap gap-2">
-                      {result.aiAnalysis.missing_stack.map((tech) => (
+                      {result.aiAnalysis.missing_stack.map((tech, index) => (
                         <span
-                          key={tech}
-                          className="bg-orange-500/10 text-orange-300 text-[10px] md:text-xs px-2 py-1 rounded-md"
+                          key={`${tech}-${index}`}
+                          className="bg-orange-500/10 text-orange-300 text-[10px] md:text-xs px-2 py-1 rounded-md border border-orange-500/20"
                         >
                           {tech}
                         </span>
@@ -246,11 +260,11 @@ export default function Home() {
               {/* Target Match Analysis */}
               {result.aiAnalysis.match_percentage !== undefined && (
                 <div className="bg-gradient-to-br from-blue-900/40 to-purple-900/40 border border-blue-500/30 p-6 md:p-8 rounded-3xl shadow-2xl space-y-6">
-                  <div className="flex flex-row justify-between items-center">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <h3 className="text-lg md:text-2xl font-bold text-blue-400 tracking-tight">
                       Target Match Analysis
                     </h3>
-                    <div className="bg-blue-500/20 px-3 md:px-4 py-1 md:py-2 rounded-full border border-blue-500/40">
+                    <div className="bg-blue-500/20 px-4 py-1.5 rounded-full border border-blue-500/40 w-full sm:w-auto text-center">
                       <span className="text-xl md:text-2xl font-black text-blue-400">
                         {result.aiAnalysis.match_percentage}%
                       </span>
@@ -262,26 +276,31 @@ export default function Home() {
                       🛠️ Repo-Specific Improvements
                     </h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {result.aiAnalysis.repo_improvements.map((repo, idx) => (
-                        <div
-                          key={idx}
-                          className="bg-zinc-900/80 border border-zinc-800 p-4 md:p-5 rounded-2xl"
-                        >
-                          <h5 className="text-white font-bold text-sm mb-2 truncate">
-                            {repo.repo_name}
-                          </h5>
-                          <ul className="space-y-2">
-                            {repo.suggestions.map((s, i) => (
-                              <li
-                                key={i}
-                                className="text-[10px] md:text-xs text-zinc-400 flex gap-2"
-                              >
-                                <span className="text-purple-500">→</span> {s}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
+                      {result.aiAnalysis.repo_improvements.map(
+                        (repo: any, idx: number) => (
+                          <div
+                            key={idx}
+                            className="bg-zinc-900/80 border border-zinc-800 p-4 md:p-5 rounded-2xl"
+                          >
+                            <h5 className="text-white font-bold text-sm mb-2 truncate">
+                              {repo.repo_name}
+                            </h5>
+                            <ul className="space-y-2">
+                              {repo.suggestions.map((s: string, i: number) => (
+                                <li
+                                  key={i}
+                                  className="text-[10px] md:text-xs text-zinc-400 flex gap-2"
+                                >
+                                  <span className="text-purple-500 shrink-0">
+                                    →
+                                  </span>{" "}
+                                  {s}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ),
+                      )}
                     </div>
                   </div>
 
@@ -303,29 +322,6 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-
-                  {/* README Generator */}
-                  <div className="bg-zinc-900/90 border border-zinc-800 p-5 md:p-8 rounded-3xl mt-6">
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-                      <h3 className="text-base md:text-xl font-bold text-green-400">
-                        📄 README Generator
-                      </h3>
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(
-                            result.aiAnalysis.readme_generator.content,
-                          );
-                          alert("README copied!");
-                        }}
-                        className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-xs font-bold transition-colors"
-                      >
-                        Copy Markdown
-                      </button>
-                    </div>
-                    <div className="bg-black/50 p-4 md:p-6 rounded-xl border border-white/5 font-mono text-[10px] md:text-xs text-zinc-300 overflow-x-auto whitespace-pre-wrap max-h-60 overflow-y-auto">
-                      {result.aiAnalysis.readme_generator.content}
-                    </div>
-                  </div>
                 </div>
               )}
 
@@ -340,6 +336,6 @@ export default function Home() {
           )}
         </AnimatePresence>
       </div>
-    </main>
+    </div>
   );
 }
