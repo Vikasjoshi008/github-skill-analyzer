@@ -4,7 +4,6 @@ An AI-powered technical auditing tool that evaluates GitHub profiles, calculates
 
 [![Vercel Deployment](https://img.shields.io/badge/Vercel-Deployed-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://your-vercel-link.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-14-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
-[![Mistral AI](https://img.shields.io/badge/Mistral_AI-Powered-FF6000?style=for-the-badge&logo=mistralai&logoColor=white)](https://mistral.ai/)
 
 ## ✨ Key Features
 
@@ -21,7 +20,7 @@ An AI-powered technical auditing tool that evaluates GitHub profiles, calculates
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
 - **Animations:** Framer Motion
-- **AI Engine:** Mistral AI (`mistral-small-latest`)
+- **AI Engine:** Open AI (`gpt-oss-20b`)
 - **Data:** GitHub REST API v3
 
 ## 🚀 Getting Started
@@ -29,7 +28,7 @@ An AI-powered technical auditing tool that evaluates GitHub profiles, calculates
 ### Prerequisites
 
 - Node.js 18.x or later
-- A Mistral AI API Key
+- A Open AI API Key
 
 ### Installation
 
