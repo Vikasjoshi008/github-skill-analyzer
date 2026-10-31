@@ -17,6 +17,30 @@ export const metadata: Metadata = {
   title: "GitHub Skill Analyzer",
   description:
     "Analyze GitHub profiles using AI to uncover hidden skills and insights.",
+  openGraph: {
+    title: "GitHub Skill Analyzer",
+    description:
+      "Analyze GitHub profiles using AI to uncover hidden skills and insights.",
+    url: "https://github-skill-analyzer.vercel.app/",
+    siteName: "GitHub Skill Analyzer",
+    images: [
+      {
+        url: "https://github-skill-analyzer.vercel.app/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "GitHub Skill Analyzer Preview",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GitHub Skill Analyzer",
+    description:
+      "Analyze GitHub profiles using AI to uncover hidden skills and insights.",
+    images: ["https://github-skill-analyzer.vercel.app/og-image.png"],
+  },
 };
 
 export default function RootLayout({

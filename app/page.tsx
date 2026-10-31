@@ -68,23 +68,17 @@ export default function Home() {
 
   const handleShare = async () => {
     if (!result) return;
-    const shareData = {
-      title: "My GitHub Skill Analysis",
-      text: `Check out my GitHub analysis! I got a Skill Score of ${result.aiAnalysis.skill_rating}/10 and I'm a ${result.aiAnalysis.match_percentage}% match for a ${result.aiAnalysis.detected_role} role.`,
-      url: window.location.href,
-    };
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-      } else {
-        await navigator.clipboard.writeText(
-          `${shareData.text} ${shareData.url}`,
-        );
-        alert("Analysis results copied to clipboard!");
-      }
-    } catch (err) {
-      console.error("Error sharing:", err);
-    }
+
+    // Create a nice, readable summary text
+    const shareText = `Check out my GitHub analysis! 🚀\n\nSkill Score: ${result.aiAnalysis.skill_rating}/10\nRole: ${result.aiAnalysis.detected_role}\n${result.aiAnalysis.match_percentage ? `Job Match: ${result.aiAnalysis.match_percentage}%` : ""}\n\nAnalyze yours here:`;
+
+    const shareUrl = window.location.href;
+
+    // Use Twitter Web Intent - It handles text + URL much better than navigator.share
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+
+    // Open in a new window
+    window.open(twitterUrl, "_blank", "width=600,height=400");
   };
 
   function StatBox({ label, value }: { label: string; value: number }) {
